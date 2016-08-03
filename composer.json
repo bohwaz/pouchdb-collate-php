@@ -1,0 +1,20 @@
+{
+    "name": "bohwaz/pouchdb-collate-php",
+    "description": "PHP port of PouchDB collate/serialization library.",
+    "license": "BSD",
+    "keywords": ["pouch", "pouchdb", "couchdb", "serialization"],
+    "authors": [
+        {
+            "name": "BohwaZ",
+            "homepage": "http://bohwaz.net/"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Bohwaz\\PouchCollate\\": "src"
+        }
+    }
+}
