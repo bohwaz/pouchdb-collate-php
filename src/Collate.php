@@ -235,6 +235,12 @@ class Collate
 
 		// Length of number (until next NUL byte)
 		$length = strpos($str, chr(0), $i) - $i;
+
+		if ($length < 0)
+		{
+			throw new \Exception('Invalid serialized number: no ending NUL byte.');
+		}
+
 		$number = substr($str, $i, $length);
 		$i += $length;
 		
@@ -289,16 +295,8 @@ class Collate
 			throw new \Exception('Not a serialized string: no NUL byte found (is this a serialized string?)');
 		}
 
-		$iteration = 0;
-
 		while ($i < strlen($str))
 		{
-			// Should not happen, but that is fail safe
-			if ($iteration++ > 100000)
-			{
-				throw new \Exception('Invalid string causing a loop.');
-			}
-
 			// closing NUL byte (end of array, end of string, end of object)
 			// stop here and return the stack
 			if (ord($str[$i]) === 0)
