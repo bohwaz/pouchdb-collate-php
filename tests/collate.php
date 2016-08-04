@@ -15,6 +15,18 @@ function assert_fail($file, $line, $code, $desc = null)
 	echo '[FAIL] :' . $line . ': ' . trim($desc) . "\n";
 }
 
+$fail = false;
+
+try {
+	Collate::parseIndexableString('not a serialized string');
+}
+catch (\Exception $e)
+{
+	$fail = $e->getMessage();
+}
+
+assert($fail === 'Not a serialized string: no NUL byte found (is this a serialized string?)', 'Invalid string');
+
 // Number serialization
 assert(
 	'23256.70000000000000017764' == Collate::numToIndexableString(67),

@@ -283,8 +283,22 @@ class Collate
 	{
 		$stack = [];
 
+		if (strpos($str, chr(0)) === false)
+		{
+			// Invalid string
+			throw new \Exception('Not a serialized string: no NUL byte found (is this a serialized string?)');
+		}
+
+		$iteration = 0;
+
 		while ($i < strlen($str))
 		{
+			// Should not happen, but that is fail safe
+			if ($iteration++ > 100000)
+			{
+				throw new \Exception('Invalid string causing a loop.');
+			}
+
 			// closing NUL byte (end of array, end of string, end of object)
 			// stop here and return the stack
 			if (ord($str[$i]) === 0)
@@ -311,6 +325,13 @@ class Collate
 				case 4:
 					// Find next NUL byte, everything between now and NUL is the string
 					$length = strpos($str, chr(0), $i) - $i;
+
+					// No NUL byte found
+					if ($length < 0)
+					{
+						throw new \Exception('Invalid serialized string: no ending NUL byte.');
+					}
+
 					$value = substr($str, $i, $length);
 					$value = self::unescapeString($value);
 					$i += $length;
